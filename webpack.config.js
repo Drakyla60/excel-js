@@ -10,15 +10,31 @@ const APP_DIST = path.resolve(__dirname, 'dist');
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = !isProd;
 
-const fileName = ext => isDev ? `bundle.${ext}`: `bundle.[hash].${ext}`;
+const fileName = (ext) => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`;
 
-// @TODO При зміненні scss файлів не перегружається сторінка, js робить нормально
+const jsLoader = () => {
+  const loaders = [
+    {
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env'],
+      },
+    },
+  ];
+
+  if (isDev) {
+    loaders.push('eslint-loader');
+  }
+
+  return loaders;
+};
+
 module.exports = {
   mode: 'development',
   entry: ['@babel/polyfill', APP_DIR + '/index.js'],
   output: {
     filename: fileName('js'),
-    path: APP_DIST
+    path: APP_DIST,
   },
   resolve: {
     extensions: ['.js'],
@@ -27,10 +43,10 @@ module.exports = {
       '@core': APP_DIR_CORE,
     },
   },
-  devtool: isDev ? 'source-map': false,
+  devtool: isDev ? 'source-map' : false,
   devServer: {
     port: 3000,
-    hot: isDev
+    hot: isDev,
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -38,19 +54,19 @@ module.exports = {
       template: APP_DIR + '/index.html',
       minify: {
         removeComments: isProd,
-        collapseWhitespace: isProd
-      }
+        collapseWhitespace: isProd,
+      },
     }),
     new CopyPlugin({
       patterns: [
         {
           from: APP_DIR + '/favicon.ico',
-          to: APP_DIST
-        }
-      ]
+          to: APP_DIST,
+        },
+      ],
     }),
     new MiniCssExtractPlugin({
-      filename: fileName('css')
+      filename: fileName('css'),
     }),
   ],
   module: {
@@ -58,21 +74,22 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: isDev,
+              reloadAll: true,
+            },
+          },
           'css-loader',
-          'sass-loader'
+          'sass-loader',
         ],
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      }
+        use: jsLoader(),
+      },
     ],
   },
-}
+};
