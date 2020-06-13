@@ -4,7 +4,6 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-
 const APP_DIR = path.resolve(__dirname, 'src');
 const APP_DIR_CORE = path.resolve(__dirname, 'src/core');
 const APP_DIST = path.resolve(__dirname, 'dist');
@@ -21,18 +20,45 @@ module.exports = {
     alias: {
       '@': APP_DIR,
       '@core': APP_DIR_CORE,
-    }
+    },
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HTMLWebpackPlugin({
       template: APP_DIR + '/index.html'
     }),
-    new CopyPlugin([
-      { from: APP_DIR + '/favicon.ico', to: APP_DIST }
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: APP_DIR + '/favicon.ico',
+          to: APP_DIST
+        }
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: 'bundle.[hash].css'
-    })
-  ]
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ],
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ],
+  },
 }
