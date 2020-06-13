@@ -7,12 +7,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const APP_DIR = path.resolve(__dirname, 'src');
 const APP_DIR_CORE = path.resolve(__dirname, 'src/core');
 const APP_DIST = path.resolve(__dirname, 'dist');
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = !isProd;
 
+const fileName = ext => isDev ? `bundle.${ext}`: `bundle.[hash].${ext}`;
+
+// @TODO При зміненні scss файлів не перегружається сторінка, js робить нормально
 module.exports = {
   mode: 'development',
-  entry: APP_DIR + '/index.js',
+  entry: ['@babel/polyfill', APP_DIR + '/index.js'],
   output: {
-    filename: 'bundle.[hash].js',
+    filename: fileName('js'),
     path: APP_DIST
   },
   resolve: {
@@ -22,10 +27,19 @@ module.exports = {
       '@core': APP_DIR_CORE,
     },
   },
+  devtool: isDev ? 'source-map': false,
+  devServer: {
+    port: 3000,
+    hot: isDev
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new HTMLWebpackPlugin({
-      template: APP_DIR + '/index.html'
+      template: APP_DIR + '/index.html',
+      minify: {
+        removeComments: isProd,
+        collapseWhitespace: isProd
+      }
     }),
     new CopyPlugin({
       patterns: [
@@ -36,7 +50,7 @@ module.exports = {
       ]
     }),
     new MiniCssExtractPlugin({
-      filename: 'bundle.[hash].css'
+      filename: fileName('css')
     }),
   ],
   module: {
