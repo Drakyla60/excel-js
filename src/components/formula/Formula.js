@@ -22,6 +22,6 @@ export class Formula extends ExcelComponent {
   }
 
   onClick() {
-    console.log('kfvkf')
+    console.log('Нажав на формулу')
   }
 }
