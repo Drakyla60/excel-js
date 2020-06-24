@@ -17,11 +17,8 @@ export class Table extends ExcelComponent {
   }
 
   onMousedown(event) {
-    // console.log('mousedown', event.target.getAttribute('data-resize'))
     if (event.target.dataset.resize) {
-      // console.log('Start resizing', event.target.dataset.resize)
       const $resizer = $(event.target)
-      // const $parent = $resizer.$el.parentNode
       const $parent = $resizer.closest('[data-type="resizable"]')
       const coords = $parent.getCoords()
 
@@ -29,6 +26,8 @@ export class Table extends ExcelComponent {
         const delta = e.pageX - coords.right
         const value = coords.width + delta
         $parent.$el.style.width = value + 'px'
+        document.querySelectorAll(`[data-col="${$parent.data.col}"]`)
+          .forEach(el => el.style.width = value + 'px')
       }
 
       document.onmouseup = () => {
