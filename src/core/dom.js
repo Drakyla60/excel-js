@@ -56,6 +56,10 @@ class Dom {
   findAll(selector) {
     return this.$el.querySelectorAll(selector)
   }
+
+  css(styles = {}) {
+
+  }
 }
 
 export function $(selector) {
