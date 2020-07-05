@@ -11,7 +11,6 @@ export class Table extends ExcelComponent {
 
   constructor($root, options) {
     super($root, {
-      // listeners: ['click', 'mousedown', 'mousemove', 'mouseup']
       listeners: ['mousedown', 'keydown', 'input'],
       ...options
     });
@@ -27,7 +26,6 @@ export class Table extends ExcelComponent {
 
   init() {
     super.init();
-
     this.selectCell(this.$root.find('[data-id="0:0"]'))
 
     this.$on('formula:input', text => {
@@ -73,8 +71,10 @@ export class Table extends ExcelComponent {
 
     if (keys.includes(key) && !event.shiftKey) {
       event.preventDefault()
+
       const id = this.selection.current.id(true)
       const $next = this.$root.find(nextSelector(key, id))
+
       this.selectCell($next)
     }
   }
