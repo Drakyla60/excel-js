@@ -72,18 +72,18 @@ export function createTable(rowsCount = 10, state = {}) {
   const rows = []
 
   const cols = new Array(colsCount)
-    .fill('')
-    .map(toChar)
-    .map(withWidthFrom(state))
-    .map(toColumn)
-    .join('')
+      .fill('')
+      .map(toChar)
+      .map(withWidthFrom(state))
+      .map(toColumn)
+      .join('')
 
   rows.push(createRow(null, cols))
 
   for (let row = 0; row < rowsCount; row++) {
     const cells = new Array(colsCount)
-      .fill('')
-      .map(toCell(state, row))
+        .fill('')
+        .map(toCell(state, row))
         .join('')
 
     rows.push(createRow(row + 1, cells))
