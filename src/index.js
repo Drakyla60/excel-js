@@ -6,11 +6,12 @@ import {Table} from '@/components/table/Table';
 
 import {createStore} from '@core/createStore';
 import {rootReducer} from '@/redux/rootReducer';
+import {initialState} from '@/redux/initialState';
 import {storage} from '@core/utils';
 
 import './scss/index.scss';
 
-const store = createStore(rootReducer, storage('excel-state'))
+const store = createStore(rootReducer, initialState)
 
 store.subscribe(state => {
   // console.log('App State: ', state)
