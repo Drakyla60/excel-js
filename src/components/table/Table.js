@@ -39,9 +39,12 @@ export class Table extends ExcelComponent {
       this.selection.current.focus()
     })
 
-    this.$on('toolbar:applyStyle', style => {
-      console.log('Table style', style)
-      this.selection.applyStyle(style)
+    this.$on('toolbar:applyStyle', value => {
+      this.selection.applyStyle(value)
+      this.$dispatch(actions.applyStyles({
+        value,
+        ids: this.selection.selectedIds
+      }))
     })
   }
 
@@ -50,7 +53,7 @@ export class Table extends ExcelComponent {
     this.$emit('table:select', $cell)
     const styles = $cell.getStyles(Object.keys(defaultStyles))
     this.$dispatch(actions.changeStyles(styles))
-    // console.log($cell.getStyles(Object.keys(defaultStyles)))
+    console.log($cell.getStyles(Object.keys(defaultStyles)))
   }
 
   async resizeTable(event) {
