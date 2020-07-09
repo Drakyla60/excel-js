@@ -6,6 +6,7 @@ import {isSell, matrix, nextSelector, shouldResize}
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
 import * as actions from '@/redux/actions'
+import {defaultStyles} from '@/constants';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
@@ -38,14 +39,16 @@ export class Table extends ExcelComponent {
       this.selection.current.focus()
     })
 
-    // this.$subscribe(state => {
-    //   console.log('TableState', state)
-    // })
+    this.$on('toolbar:applyStyle', style => {
+      console.log('Table style', style)
+      this.selection.applyStyle(style)
+    })
   }
 
   selectCell($cell) {
     this.selection.select($cell)
     this.$emit('table:select', $cell)
+    console.log($cell.getStyles(Object.keys(defaultStyles)))
   }
 
   async resizeTable(event) {
