@@ -29,7 +29,7 @@ export function getAllKeys() {
 
 export function createRecordsTable() {
   const keys = getAllKeys()
-  console.log('Keys', keys)
+  // console.log('Keys', keys)
   if (!keys.length) {
     return `<p>Ви ще не створювали таблиць </p>`
   }
