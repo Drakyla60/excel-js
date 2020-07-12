@@ -8,7 +8,8 @@ const defaultState = {
   dataState: {},
   stylesState: {},
   currentText: '',
-  currentStyle: defaultStyles
+  currentStyle: defaultStyles,
+  openedDate: new Date().toJSON()
 }
 
 const normalize = state => ({
